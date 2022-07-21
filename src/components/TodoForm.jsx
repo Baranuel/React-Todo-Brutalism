@@ -2,16 +2,28 @@ import React,{useState, useEffect, useRef} from 'react'
 import '../index.css'
 import FinishedTodo from './FinishedTodo'
 import Todo from './Todo'
+import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
+import 'react-tabs/style/react-tabs.css';
 
 function TodoForm() {
 
-  const [idCount, setIdCount] = useState(1)
   const [todo,setTodo] = useState({
     id:"",
     description:"",
     isActive:false,
     isFinished:false,
   })
+  
+  const [todoItems, setTodoItems] = useState(
+    JSON.parse(localStorage.getItem("todoItems"))
+    ||
+  []
+    )
+    
+  const [idCount, setIdCount] = useState(
+    0
+  )
+
 
   const handleChange = e => {
 
@@ -22,7 +34,6 @@ function TodoForm() {
     }))
   }
   
-  const [todoItems, setTodoItems] = useState([])
 
   const addTodo = (e) => {
 
@@ -41,13 +52,13 @@ function TodoForm() {
     description: refValue.current
   }))
 
-  setIdCount( prev => {
-    return prev + 1
-  })
+  setIdCount(prev => prev + 1)
 
   }
-  console.log(idCount)
+
   useEffect(() => {
+
+    localStorage.setItem("todoItems", JSON.stringify(todoItems))
 
     setActiveTodo(prev => {
       return  todoItems.filter( item => item.isActive === true)
@@ -57,13 +68,22 @@ function TodoForm() {
       return todoItems.filter ( item => item.isFinished === true)
     })
 
+    if(todoItems.length < 1) {setIdCount(1) }
+
   },[todoItems])
 
   const [activeTodo, setActiveTodo] = useState([])
   const [finishedTodo, setFinishedTodo] = useState([])
+  const [selectedTodo, setSelectedTodo] = useState({})
+
+  const selectTodo = (id) => {
+    return todoItems.map( item => {
+      return item.id === id ? setSelectedTodo(item) : {}
+    })
+  }
+
 
 const clearFinished = () => {
-
   setTodoItems(prev => {
     return todoItems.filter( item => item.isFinished === false)
   })
@@ -78,11 +98,8 @@ const clearFinished = () => {
   }
 
   const date = new Date()
-  const hours = date.getHours()
   const day = date.getDate()
-  const minutes = date.getMinutes()
   const month = date.getMonth()
-  console.log(month)
 
   const getTime = () => {
     return {
@@ -92,7 +109,7 @@ const clearFinished = () => {
     }
   }
 
-  console.log(getTime())
+
 
   const setActive = id => {
 
@@ -126,12 +143,26 @@ const clearFinished = () => {
 
   const populateTodos = todoItems.map( (item,index) => {
     if(!item.isFinished && !item.isActive)
-    return ( <Todo key={index} removeTodo={removeTodo} setActive={setActive} data={item} />)
+    return ( 
+    <Todo
+      selectedTodo={selectedTodo}
+      selectTodo={selectTodo}
+      key={index}
+      removeTodo={removeTodo}
+      setActive={setActive}
+      data={item} />)
   })
 
   const populateActive = activeTodo.map( (item,index) => {
     if(item.isActive) {
-      return ( <Todo currentActive={true} key={index} setFinished={setFinished} unsetActive={unsetActive} setActive={setActive} data={item} />)
+      return ( 
+      <Todo
+        selectedTodo={selectedTodo}
+        selectTodo={selectTodo}
+        currentActive={true}
+        key={index}
+        setFinished={setFinished}
+        unsetActive={unsetActive} setActive={setActive} data={item} />)
     } 
   })
 
@@ -178,10 +209,27 @@ const clearFinished = () => {
           {populateActive}
           </div>
           <hr />
-          <div className='finished-todos'>
-            <h1>Finished Todos {finishedTodo.length} <button className='add-todo' onClick={clearFinished}>Clear</button></h1>
-          {populateFinished}
-          </div>
+          <Tabs>
+            <TabList>
+              <Tab>Info</Tab>
+              <Tab>Finished</Tab>
+            </TabList>
+            <TabPanel>
+              {selectedTodo && 
+              <div className='selected-show'>
+                <p>
+
+                  {selectedTodo.description}
+                  </p>
+                </div>}
+            </TabPanel>
+            <TabPanel className='finished-todos'>
+              <div className=''>
+              <button onClick={clearFinished} className='add-todo'>Clear</button>
+                {populateFinished}
+              </div>
+            </TabPanel>
+          </Tabs>
         </div>
     </div>
   )

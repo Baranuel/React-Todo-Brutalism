@@ -13,21 +13,21 @@ code {
 }
 
 .App {
-  background-color: rgb(239, 77, 77);
+  background-color: rgb(255, 255, 255);
   height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 .todo-form{
-  width: 75%;
+  width: 86vw;
   height: 85vh;
-  background-color: rgb(232, 247, 144);
+  background-color: rgb(246, 240, 240);
   border: 10px solid black;
   display: flex;
 }
 .form-wrapper {
-  width: 50%;
+  width: 100%;
 }
 .todo-list {
   display: flex;
@@ -62,7 +62,7 @@ label {
   font-weight: 700;
 }
 .add-todo {
-  margin: 1rem;
+  margin: 0.5rem 1rem;
   padding: 1rem 3rem;
   font-size: 1.3rem;
   border: 2px solid black;
@@ -87,12 +87,12 @@ label {
 .focused-todos {
   display: flex;
   flex-direction: column;
-  width: 50%;
+  width: 100%  ;
   border-left: 5px solid black
 }
 
 .focused-todos * {
-  margin: 2rem 1rem;
+  margin: 1rem 1rem;
 }
 .todo {
   display: flex;
@@ -101,7 +101,8 @@ label {
   margin: 0.5rem 1rem;
   border: 2px solid black;
   max-height: 70px;
-  background-color: rgb(238, 254, 255)
+  background-color: rgb(238, 254, 255);
+  transition:all  100ms ease-in-out;
 }
 .heading {
   margin: 1rem;
@@ -122,10 +123,15 @@ label {
   margin: 0 0.2rem;
   font-weight: 600;
   font-size: 1rem;
+  transition: all 100ms ease-in-out;
 
 }
 #y {
   background-color: rgb(0, 255, 55);
+}
+.todo-button:hover {
+  cursor: pointer;
+  transform: scale(1.1);
 }
 #x {
   background-color: red;
@@ -141,6 +147,7 @@ label {
 }
 .finished-todos {
   overflow-y: scroll;
+  height: 60%;
 }
 
 .finished-todo {
@@ -156,4 +163,25 @@ label {
 .time span {
   margin: 0;
   font-weight: 600;
+}
+
+.selectedTodo {
+  background-color: purple;
+  color: rgb(255, 255, 255);
+  box-shadow: 6px 6px 4px 2px rgb(56, 55, 55);
+  transform: scale(1.02);
+}
+
+.selected-show {
+  background-color: rgb(249, 229, 198);
+  min-height: 150px;
+  font-size: 1.5rem;
+  font-weight: 700;
+  box-shadow: 2px 2px 4px 2px rgb(56, 55, 55);
+
+}
+
+.selected-show p {
+  margin:1rem;
+  padding: 1rem;
 }
